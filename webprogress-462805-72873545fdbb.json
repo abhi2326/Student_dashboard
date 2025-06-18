@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "webprogress-462805",
+  "private_key_id": "72873545fdbb1ba1ad91a33a045250ce6d4d106e",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDJ6QRZn28B9aNp\nL5nTdE6xe1FSomWRKeXnbp88yM5Do79Uq9ppbaxSKfc7Z6xupnWXlX9DN10Z4Z8j\nqvjEmvsYuC/VAoi0s0BoUdXyOv/c8XJ0xI1MqeZiVvJZtMSPbnbsNZBIU4ygTGBV\nzXPsjCsu+k8iHIS3tqJtVFEHehC6w5BoP9BbFW3523l9+YmlYuEfjyoF8lvL2YxE\n/q5EGknRAQIQcIlCvKcZJU0x4xfPz3Lt7bm+W6lAJ+twawu1Ur2ZGbtY9iESTgXO\nOuhCfm5F9ROw+36H3IS+Q0lMbCNcCNdvCaavD3P4al1cXc9Ho0ONsjv4txEc6eUJ\nbWqTKHr9AgMBAAECggEAPAg1nGYMbdM4flZCUL4Uha2KLN0PAL2p1wkrfDmiJjdB\n9G1SN6V9pkJG+VkmShHhBaxT1crYuhC8rbCwXVhNDvj4c8dYmQ1wuXOXfnlvSKRb\nKP+lmWUslBGQ5f4asSChaDK2zuJUffanb+txq6OzVTjkHVrIVQ0Otx3qJ6Rx4+0p\nMz0PAAr69vkflXMB6j8goRAnGm7RXRdJSv5jiPA7VFN8Jk7Nn/eR+CAYGYY5dlhx\nIR2Tw8z0nxwnCA5mEKohGaEwGcaTsf1x+BLAGtFql8E84P++4PshpOcSJThdFXX9\nTkCaDe7oXfXhR2BzuyZG1FgB7v7yORsMMnHvpwplCwKBgQDrjvYxnN1HA5mDh5Ep\n/n7AALIKn6PscWQZWEIvGT1MoHC89RqdBuAtwOE8Zfmz0+qKEYorFuRCuIUpVR6J\nSMpTJoP3S2DcxgCqobCZkrbEti90uvsa6x/au/4oErq+4pAVU9kaAce7dXjDda2Y\nFBCnlfCnlubKeuRXRLtBQRUNPwKBgQDbbotx3MWfLnyuIuKXZ/kKQ7mnjczYPCkg\nGWqKrAhEwGF+FRN1asExnzyDz7X7Wiq+rkCPKwwBUhGTP0+bwnxK5LKbc1xSFDOA\nS4sCBpGxVkhLybLZszCLw8ohpgWhEbNRNwlrrH+7BcgWrqbfhGx2onkgacN9Yn1N\nbNqL17OcwwKBgQCqv/yyRfUYjwFumIyflj0mzNpCXSokMKXQwWtoXLFUpFBUiI98\nGAnU4KXkdD8nHYw7/S7cwUFBJCRSq8Lw3PTchWTPk7JpFpZRGde72t/lg/KueQOg\npaN3mSJIxhrcV7r92sPa2EOCHUsm1Fy7in/wGv5RXU96os52e/oI+TZbXQKBgFwu\n2I4A/VSeJurQ5PhOSaUyRnBJdeDxhSVjCAsxslePqmVZXU9ahcbe6oFFZWIuwv5Q\nHfcHUofLfm6pjjwVPDoKUa5UjFg+/FPNaJx1PgeOA9ky5tvmF2Lf4a65HGxKD1bz\nFBYT5aUgDKravGfyLc64+sHPLL0j/xfjvvw4pdAZAoGBAKoX3Wx5cSKT5G8hkJmO\nSWI6J71kZf0ALo8d4+al/8yYw/10+MOTAnnzD7HN1RDSWZwoRS0GhWJN00Y3iFa/\n2ZkT71miHG6LGMknPXuBpZjVBY5q9Lk8KkfW+a1RYd1HpM1GVixoRsxIkFphhg9n\n0xSYVNgriMf2H36VlvTRfgkL\n-----END PRIVATE KEY-----\n",
+  "client_email": "student-dashboard-service@webprogress-462805.iam.gserviceaccount.com",
+  "client_id": "100933778858110246293",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/student-dashboard-service%40webprogress-462805.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
