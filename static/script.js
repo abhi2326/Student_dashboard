@@ -1,9 +1,9 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     let allStudents = []; // Store all students data
     let currentStudentId = null; // Track currently selected student
     let currentView = 'individual'; // Track current dashboard view
     let currentComprehensiveView = 'table'; // Track comprehensive view type
-    
+
     const studentList = document.getElementById('studentList');
     const studentDashboard = document.getElementById('studentDashboard');
     const studentSearchInput = document.getElementById('studentSearch');
@@ -26,17 +26,19 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             showLoading('Loading students...');
             const response = await fetch('/api/students');
+            console.log(response);
+            
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             allStudents = await response.json();
             renderStudentList();
             hideLoading();
-            
+
             // Update header stats
             updateHeaderStats();
             updateOverviewStats();
-            
+
             // Show welcome message only after initial fetch
             showWelcomeMessage();
         } catch (error) {
@@ -50,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const totalStudents = allStudents.length;
         const avgScore = calculateOverallAverage();
         const topPerformer = findTopPerformer();
-        
+
         document.getElementById('totalStudents').textContent = totalStudents;
         document.getElementById('avgScore').textContent = `${avgScore.toFixed(1)}%`;
         document.getElementById('topPerformerScore').textContent = topPerformer ? `${topPerformer.average_score.toFixed(1)}%` : '-';
@@ -79,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <p>Click on any student to view their detailed performance analysis.</p>
             `;
             studentDashboard.appendChild(welcomeDiv);
-            
+
             // Remove welcome message after 5 seconds
             setTimeout(() => {
                 if (welcomeDiv.parentNode) {
@@ -91,16 +93,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function renderStudentList(filterText = '', performanceFilterValue = 'all') {
         studentList.innerHTML = '';
-        
+
         let filteredStudents = allStudents.filter(student => {
             const nameMatch = student.name.toLowerCase().includes(filterText.toLowerCase());
             const idMatch = student.id.toLowerCase().includes(filterText.toLowerCase());
             const textMatch = nameMatch || idMatch;
-            
+
             if (!textMatch) return false;
-            
+
             const avgScore = calculateAverageScore(student.performance);
-            
+
             switch (performanceFilterValue) {
                 case 'excellent':
                     return avgScore >= 90;
@@ -124,31 +126,31 @@ document.addEventListener('DOMContentLoaded', function() {
             const listItem = document.createElement('li');
             const avgScore = calculateAverageScore(student.performance);
             const performanceLevel = getPerformanceLevel(avgScore);
-            
+
             listItem.innerHTML = `
                 <span>${student.name}</span>
                 <span class="performance-indicator">${avgScore.toFixed(1)}%</span>
             `;
             listItem.dataset.studentId = student.id;
-            
+
             // Add staggered animation
             listItem.style.animationDelay = `${index * 0.1}s`;
             listItem.classList.add('fade-in');
-            
+
             listItem.addEventListener('click', () => {
                 // Remove active class from all items
                 document.querySelectorAll('#studentList li').forEach(li => li.classList.remove('active'));
                 // Add active class to clicked item
                 listItem.classList.add('active');
                 displayStudentDashboard(student.id);
-                
+
                 // Add click animation
                 listItem.style.transform = 'scale(0.95)';
                 setTimeout(() => {
                     listItem.style.transform = '';
                 }, 150);
             });
-            
+
             // Add color coding based on performance
             if (avgScore >= 90) {
                 listItem.style.borderLeft = '4px solid var(--success)';
@@ -159,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 listItem.style.borderLeft = '4px solid var(--danger)';
             }
-            
+
             studentList.appendChild(listItem);
         });
     }
@@ -168,8 +170,9 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             currentStudentId = studentId;
             showLoading('Loading student data...');
-            
+
             const response = await fetch(`/api/student/${studentId}`);
+            console.log(response);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -177,6 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (student) {
                 renderStudentDashboard(student);
+                
                 // Switch to individual view when a student's details are displayed
                 showIndividualView();
             } else {
@@ -257,6 +261,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </div>
 
+
+            <div class = "hamari_table">
+                <table id="subjectPerformanceTable" class="subject-performance-table">
+                    <!-- Populated by JS -->
+                </table>
+            </div>
+
+
+            
+
             <div class="performance-details" style="margin-top:2rem;">
                 <h3 style="margin-bottom:1rem;"><i class="fas fa-chart-bar"></i> Performance Breakdown</h3>
                 <div style="display:flex; flex-wrap:wrap; gap:2rem; align-items:flex-start;">
@@ -282,14 +296,55 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </div>
 
+            
+
             <div id="performanceChartContainer" style="margin-top:2.5rem;">
                 <h3 style="margin-bottom:1rem;"><i class="fas fa-chart-line"></i> Performance Growth Chart</h3>
-                <canvas id="performanceChart" width="600" height="260"></canvas>
+                <div style="height: 300px; width: 100%; max-width: 600px;">
+                    <canvas id="performanceChart"></canvas>
+                </div>
             </div>
         `;
 
         // Render the performance growth chart (hyperbolic style)
         renderPerformanceGrowthChart(performanceData);
+        // Add this inside the existing studentDashboard.innerHTML template string,
+// just AFTER the ".progress-section" section and BEFORE renderPerformanceGrowthChart()
+
+const subjectPerformanceTable = document.getElementById('subjectPerformanceTable');
+if (performanceData && typeof performanceData === 'object') {
+    console.log(student);
+    
+    let tableHTML = `
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+    `;
+
+    const subjects = ['EDA', 'ML', 'Power BI', 'Python', 'SQL', 'Spreadsheet'];
+
+    subjects.forEach(subject => {
+        const score = performanceData[subject] ?? 0;
+        tableHTML += `
+            <tr>
+                <td>${subject}</td>
+                <td>${score}</td>
+            </tr>
+        `;
+    });
+
+    tableHTML += `</tbody>`;
+    subjectPerformanceTable.innerHTML = tableHTML;
+}
+
+    }
+
+    function make_table(){
+
     }
 
     function calculateAverageScore(performanceData) {
@@ -308,139 +363,223 @@ document.addEventListener('DOMContentLoaded', function() {
     function getPerformanceTrend(performanceData) {
         const scores = Object.values(performanceData).filter(score => typeof score === 'number' && score > 0);
         if (scores.length < 3) return 'Insufficient Data';
-        
+
         const recentScores = scores.slice(-3);
         const earlierScores = scores.slice(0, -3);
-        
+
         if (earlierScores.length === 0) return 'Stable';
-        
+
         const recentAvg = recentScores.reduce((sum, score) => sum + score, 0) / recentScores.length;
         const earlierAvg = earlierScores.reduce((sum, score) => sum + score, 0) / earlierScores.length;
-        
+
         if (recentAvg > earlierAvg + 5) return 'Improving';
         if (recentAvg < earlierAvg - 5) return 'Declining';
         return 'Stable';
     }
 
-    // Defensive: Render a line chart showing hyperbolic-like growth using per-task scores as pseudo-weeks
+    // Render a hyperbolic growth chart showing all task modules together
     function renderPerformanceGrowthChart(performanceData) {
         const ctx = document.getElementById('performanceChart');
-        if (!ctx) return;
-
-        // Get all scores, sorted as if by week (simulate growth)
-        let scores = performanceData && typeof performanceData === 'object'
-            ? Object.values(performanceData).filter(score => typeof score === 'number' && !isNaN(score))
-            : [];
-
-        // Defensive: Always plot at least two points
-        if (!scores.length) {
-            scores = [0, 0];
-        } else if (scores.length === 1) {
-            scores = [scores[0], scores[0]];
+        if (!ctx) {
+            console.error('Performance chart canvas not found');
+            return;
         }
 
-        // If all scores are zero, use a demo growth curve for display
-        const allZero = scores.every(v => v === 0);
-        let blendedScores;
-        if (allZero) {
-            blendedScores = [10, 20, 35, 55, 75, 90];
-        } else {
-            // Simulate a hyperbolic growth: sort, then apply a curve
-            scores = scores.sort((a, b) => a - b);
-            const n = scores.length;
-            const max = Math.max(...scores);
-            const hyperbolicScores = scores.map((s, i) => n > 1 ? (max * (i / (i + 2))) : s);
-            blendedScores = scores.map((s, i) => Math.round((s + hyperbolicScores[i]) / 2));
+        // Check if Chart.js is available
+        if (typeof Chart === 'undefined') {
+            console.error('Chart.js library not loaded');
+            const container = document.getElementById('performanceChartContainer');
+            if (container) {
+                container.innerHTML = `
+                    <h3 style="margin-bottom:1rem;"><i class="fas fa-chart-line"></i> All Modules Growth Chart</h3>
+                    <div class="error-message" style="padding: 2rem; text-align: center; background: #f8f9fa; border-radius: 8px;">
+                        <i class="fas fa-exclamation-triangle" style="color: #f59e0b; margin-right: 0.5rem;"></i>
+                        Chart library is loading. Please refresh the page if this message persists.
+                    </div>
+                `;
+            }
+            return;
         }
 
-        // X-axis: Week 1, Week 2, ...
-        const labels = blendedScores.map((_, i) => `Week ${i + 1}`);
+        try {
+            // Define all task modules we want to display
+            const taskModules = ['Spreadsheet', 'SQL', 'Power BI', 'Python', 'EDA', 'ML'];
 
-        // Destroy existing chart if it exists
-        if (window.performanceChart) {
-            window.performanceChart.destroy();
-        }
+            // Colors for each module (different colors for visual distinction)
+            const moduleColors = {
+                'Spreadsheet': { border: '#10b981', bg: 'rgba(16,185,129,0.1)' },
+                'SQL': { border: '#3b82f6', bg: 'rgba(59,130,246,0.1)' },
+                'Power BI': { border: '#f59e0b', bg: 'rgba(245,158,11,0.1)' },
+                'Python': { border: '#ef4444', bg: 'rgba(239,68,68,0.1)' },
+                'EDA': { border: '#8b5cf6', bg: 'rgba(139,92,246,0.1)' },
+                'ML': { border: '#06b6d4', bg: 'rgba(6,182,212,0.1)' }
+            };
 
-        window.performanceChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Performance Growth',
-                    data: blendedScores,
+            // Create datasets for each module with hyperbolic growth curves
+            const datasets = [];
+            const timePoints = 8; // Number of time points to show progression
+            const labels = Array.from({ length: timePoints }, (_, i) => `Stage ${i + 1}`);
+
+            taskModules.forEach(module => {
+                const actualScore = performanceData && performanceData[module]
+                    ? parseFloat(performanceData[module]) : 0;
+
+                // Generate hyperbolic growth curve for this module
+                // Formula: y = a * (1 - e^(-bx)) where 'a' is the asymptote (target score)
+                // We'll use the actual score as the final target, with some reasonable progression
+                const targetScore = Math.max(actualScore, 20); // Minimum 20 for visualization
+                const growthData = [];
+
+                for (let i = 0; i < timePoints; i++) {
+                    // Hyperbolic growth: starts slow, accelerates, then levels off
+                    const x = (i + 1) / timePoints; // Normalize to 0-1
+                    const growthFactor = 1 - Math.exp(-3 * x); // Hyperbolic curve
+                    const score = Math.round(targetScore * growthFactor);
+                    growthData.push(Math.min(score, 100));
+                }
+
+                // Ensure the last point matches the actual score if available
+                if (actualScore > 0) {
+                    growthData[timePoints - 1] = actualScore;
+                }
+
+                datasets.push({
+                    label: module,
+                    data: growthData,
                     fill: false,
-                    borderColor: '#2563eb',
-                    backgroundColor: 'rgba(37,99,235,0.15)',
-                    tension: 0.5,
-                    pointBackgroundColor: '#2563eb',
+                    borderColor: moduleColors[module].border,
+                    backgroundColor: moduleColors[module].bg,
+                    tension: 0.4, // Smooth curves
+                    pointBackgroundColor: moduleColors[module].border,
                     pointBorderColor: '#fff',
-                    pointRadius: 6,
-                    pointHoverRadius: 9,
-                    borderWidth: 3
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    borderWidth: 3,
+                    pointBorderWidth: 2
+                });
+            });
+
+            // Destroy existing chart if it exists
+            if (window.performanceChart && typeof window.performanceChart.destroy === 'function') {
+                window.performanceChart.destroy();
+            }
+
+            // Create new chart with all modules
+            window.performanceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            top: 10,
+                            bottom: 10
+                        }
                     },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return `Score: ${context.parsed.y}%`;
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 15,
+                                font: {
+                                    size: 12,
+                                    weight: '500'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            cornerRadius: 6,
+                            multiKeyBackground: 'transparent',
+                            callbacks: {
+                                title: function (context) {
+                                    return `Progress: ${context[0].label}`;
+                                },
+                                label: function (context) {
+                                    return `${context.dataset.label}: ${context.parsed.y}%`;
+                                }
                             }
                         }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100,
-                        title: {
-                            display: true,
-                            text: 'Score (%)',
-                            color: '#2563eb',
-                            font: { size: 14, weight: 'bold' }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Proficiency Score (%)',
+                                color: '#374151',
+                                font: { size: 14, weight: '600' }
+                            },
+                            ticks: {
+                                color: '#6b7280',
+                                font: { size: 12 },
+                                callback: function (value) {
+                                    return value + '%';
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)',
+                                drawBorder: false
+                            }
                         },
-                        ticks: {
-                            color: '#6b7280',
-                            font: { size: 12 }
-                        },
-                        grid: {
-                            color: 'rgba(0,0,0,0.07)'
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Learning Progression',
+                                color: '#374151',
+                                font: { size: 14, weight: '600' }
+                            },
+                            ticks: {
+                                color: '#6b7280',
+                                font: { size: 12 }
+                            },
+                            grid: {
+                                display: false
+                            }
                         }
                     },
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Weeks',
-                            color: '#2563eb',
-                            font: { size: 14, weight: 'bold' }
-                        },
-                        ticks: {
-                            color: '#6b7280',
-                            font: { size: 12 }
-                        },
-                        grid: {
-                            display: false
-                        }
+                    animation: {
+                        duration: 2000,
+                        easing: 'easeInOutQuart'
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
                     }
-                },
-                animation: {
-                    duration: 1200,
-                    easing: 'easeInOutQuart'
                 }
+            });
+
+            console.log('All modules hyperbolic growth chart rendered successfully');
+
+        } catch (error) {
+            console.error('Error rendering performance chart:', error);
+            const container = document.getElementById('performanceChartContainer');
+            if (container) {
+                container.innerHTML = `
+                    <h3 style="margin-bottom:1rem;"><i class="fas fa-chart-line"></i> All Modules Growth Chart</h3>
+                    <div class="error-message" style="padding: 2rem; text-align: center; background: #fee2e2; border-radius: 8px; color: #dc2626;">
+                        <i class="fas fa-exclamation-triangle" style="margin-right: 0.5rem;"></i>
+                        Unable to load performance chart. Please try refreshing the page.
+                    </div>
+                `;
             }
-        });
+        }
     }
 
     // Navigation Functions
     function updateNavigation() {
         const navLinks = document.querySelectorAll('.nav-link');
         navLinks.forEach(link => link.classList.remove('active'));
-        
+
         const activeLink = document.querySelector(`[onclick="show${currentView.charAt(0).toUpperCase() + currentView.slice(1)}View()"]`);
         if (activeLink) {
             activeLink.classList.add('active');
@@ -448,35 +587,34 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Global navigation functions
-    window.showIndividualView = function() {
+    window.showIndividualView = function () {
         currentView = 'individual';
         updateNavigation();
-        
+
         document.querySelectorAll('.dashboard-view').forEach(view => view.classList.remove('active'));
         document.getElementById('individualDashboard').classList.add('active');
-        
-        if (currentStudentId) {
-            displayStudentDashboard(currentStudentId);
-        }
+
+        // Removed automatic call to displayStudentDashboard to prevent infinite loop
+        // The dashboard will be displayed when a student is explicitly clicked
     };
 
-    window.showComprehensiveView = function() {
+    window.showComprehensiveView = function () {
         currentView = 'comprehensive';
         updateNavigation();
-        
+
         document.querySelectorAll('.dashboard-view').forEach(view => view.classList.remove('active'));
         document.getElementById('comprehensiveDashboard').classList.add('active');
-        
+
         loadComprehensiveDashboard();
     };
 
-    window.showAnalyticsView = function() {
+    window.showAnalyticsView = function () {
         currentView = 'analytics';
         updateNavigation();
-        
+
         document.querySelectorAll('.dashboard-view').forEach(view => view.classList.remove('active'));
         document.getElementById('analyticsDashboard').classList.add('active');
-        
+
         loadAnalyticsDashboard();
     };
 
@@ -490,7 +628,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const avgScore = calculateOverallAverage();
         const topPerformer = findTopPerformer();
         const improvingCount = countImprovingStudents();
-        
+
         document.getElementById('totalStudentsOverview').textContent = totalStudents;
         document.getElementById('avgScoreOverview').textContent = `${avgScore.toFixed(1)}%`;
         document.getElementById('topPerformer').textContent = topPerformer ? topPerformer.name : 'N/A';
@@ -539,13 +677,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     </thead>
                     <tbody>
                         ${allStudents.map(student => {
-                            const avgScore = calculateAverageScore(student.performance);
-                            const highestScore = Math.max(...Object.values(student.performance).filter(score => typeof score === 'number' && score > 0));
-                            const taskCount = Object.values(student.performance).filter(score => typeof score === 'number' && score > 0).length;
-                            const trend = getPerformanceTrend(student.performance);
-                            const performanceClass = getPerformanceClass(avgScore);
-                            
-                            return `
+            const avgScore = calculateAverageScore(student.performance);
+            const highestScore = Math.max(...Object.values(student.performance).filter(score => typeof score === 'number' && score > 0));
+            const taskCount = Object.values(student.performance).filter(score => typeof score === 'number' && score > 0).length;
+            const trend = getPerformanceTrend(student.performance);
+            const performanceClass = getPerformanceClass(avgScore);
+
+            return `
                                 <tr>
                                     <td>${student.name}</td>
                                     <td>${student.id}</td>
@@ -568,7 +706,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     </td>
                                 </tr>
                             `;
-                        }).join('')}
+        }).join('')}
                     </tbody>
                 </table>
             </div>
@@ -579,13 +717,13 @@ document.addEventListener('DOMContentLoaded', function() {
         container.innerHTML = `
             <div class="cards-grid">
                 ${allStudents.map(student => {
-                    const avgScore = calculateAverageScore(student.performance);
-                    const highestScore = Math.max(...Object.values(student.performance).filter(score => typeof score === 'number' && score > 0));
-                    const taskCount = Object.values(student.performance).filter(score => typeof score === 'number' && score > 0).length;
-                    const trend = getPerformanceTrend(student.performance);
-                    const performanceClass = getPerformanceClass(avgScore);
-                    
-                    return `
+            const avgScore = calculateAverageScore(student.performance);
+            const highestScore = Math.max(...Object.values(student.performance).filter(score => typeof score === 'number' && score > 0));
+            const taskCount = Object.values(student.performance).filter(score => typeof score === 'number' && score > 0).length;
+            const trend = getPerformanceTrend(student.performance);
+            const performanceClass = getPerformanceClass(avgScore);
+
+            return `
                         <div class="student-card">
                             <div class="card-header">
                                 <h3>${student.name}</h3>
@@ -625,7 +763,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             </div>
                         </div>
                     `;
-                }).join('')}
+        }).join('')}
             </div>
         `;
     }
@@ -800,7 +938,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Global functions for view switching
-    window.switchView = function(view) {
+    window.switchView = function (view) {
         currentComprehensiveView = view;
         document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
         event.target.closest('.view-btn').classList.add('active');
@@ -808,23 +946,23 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // Search and filter functions
-    window.searchStudent = function() {
+    window.searchStudent = function () {
         const searchTerm = studentSearchInput.value.trim();
         const filterValue = performanceFilter.value;
         renderStudentList(searchTerm, filterValue);
     };
 
-    window.filterStudents = function() {
+    window.filterStudents = function () {
         const searchTerm = studentSearchInput.value.trim();
         const filterValue = performanceFilter.value;
         renderStudentList(searchTerm, filterValue);
     };
 
     // Sidebar toggle function
-    window.toggleStudentList = function() {
+    window.toggleStudentList = function () {
         const content = document.getElementById('studentListContent');
         const icon = document.getElementById('toggleIcon');
-        
+
         if (content.classList.contains('expanded')) {
             content.classList.remove('expanded');
             content.classList.add('collapsed');
@@ -865,7 +1003,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <span>${message}</span>
         `;
         document.body.appendChild(errorDiv);
-        
+
         setTimeout(() => {
             if (errorDiv.parentNode) {
                 errorDiv.remove();
@@ -981,6 +1119,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         </style>
     `;
-    
+
     document.head.insertAdjacentHTML('beforeend', additionalCSS);
 }); 
