@@ -5,6 +5,31 @@
     box-sizing: border-box;
 }
 
+
+#{
+    height: 500px;
+    overflow: scroll;
+}
+
+.subject-performance-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.subject-performance-table th,
+.subject-performance-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.subject-performance-table thead {
+    background-color: #f8f9fc;
+    font-weight: bold;
+}
+
+
 :root {
     /* Primary Colors - Newton School inspired */
     --primary-blue: #2563eb;
@@ -121,6 +146,11 @@ h4 { font-size: var(--font-size-xl); }
     align-items: center;
     gap: var(--spacing-3);
 }
+
+.nav-brand a {
+    text-decoration-line : none ;
+}
+
 
 .logo {
     display: flex;
