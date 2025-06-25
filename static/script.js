@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const welcomeDiv = document.createElement('div');
             welcomeDiv.className = 'welcome-message success';
             welcomeDiv.innerHTML = `
-                <h3>🎉 Welcome to Student Performance Analytics!</h3>
+                <h3>Welcome to Student Performance Analytics!</h3>
                 <p>Loaded ${allStudents.length} students with performance data.</p>
                 <p>Click on any student to view their detailed performance analysis.</p>
             `;
@@ -317,9 +317,11 @@ if (performanceData && typeof performanceData === 'object') {
     
     let tableHTML = `
         <thead>
+        <th> Student's Scores</th>
             <tr>
                 <th>Subject</th>
-                <th>Score</th>
+                <th>Arena Score</th>
+                <th>ASync Score</th>
             </tr>
         </thead>
         <tbody>
@@ -330,6 +332,7 @@ if (performanceData && typeof performanceData === 'object') {
     subjects.forEach(subject => {
         const score = performanceData[subject] ?? 0;
         tableHTML += `
+
             <tr>
                 <td>${subject}</td>
                 <td>${score}</td>
