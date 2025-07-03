@@ -356,7 +356,7 @@ h4 { font-size: var(--font-size-xl); }
 
 .content-container {
     display: grid;
-    grid-template-columns: 300px 1fr;
+    grid-template-columns: 100%;
     gap: var(--spacing-8);
     min-height: 600px;
 }

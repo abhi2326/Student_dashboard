@@ -664,7 +664,7 @@ if (performanceData && typeof performanceData === 'object') {
 
     function renderTableView(container) {
         container.innerHTML = `
-            <div class="table-container">
+            <div class="table-container" style="overflow-x:auto; max-height:400px;">
                 <table class="students-table">
                     <thead>
                         <tr>
@@ -680,13 +680,13 @@ if (performanceData && typeof performanceData === 'object') {
                     </thead>
                     <tbody>
                         ${allStudents.map(student => {
-            const avgScore = calculateAverageScore(student.performance);
-            const highestScore = Math.max(...Object.values(student.performance).filter(score => typeof score === 'number' && score > 0));
-            const taskCount = Object.values(student.performance).filter(score => typeof score === 'number' && score > 0).length;
-            const trend = getPerformanceTrend(student.performance);
-            const performanceClass = getPerformanceClass(avgScore);
+                            const avgScore = calculateAverageScore(student.performance);
+                            const highestScore = Math.max(...Object.values(student.performance).filter(score => typeof score === 'number' && score > 0));
+                            const taskCount = Object.values(student.performance).filter(score => typeof score === 'number' && score > 0).length;
+                            const trend = getPerformanceTrend(student.performance);
+                            const performanceClass = getPerformanceClass(avgScore);
 
-            return `
+                            return `
                                 <tr>
                                     <td>${student.name}</td>
                                     <td>${student.id}</td>
@@ -709,7 +709,7 @@ if (performanceData && typeof performanceData === 'object') {
                                     </td>
                                 </tr>
                             `;
-        }).join('')}
+                        }).join('')}
                     </tbody>
                 </table>
             </div>
@@ -718,55 +718,57 @@ if (performanceData && typeof performanceData === 'object') {
 
     function renderCardView(container) {
         container.innerHTML = `
-            <div class="cards-grid">
-                ${allStudents.map(student => {
-            const avgScore = calculateAverageScore(student.performance);
-            const highestScore = Math.max(...Object.values(student.performance).filter(score => typeof score === 'number' && score > 0));
-            const taskCount = Object.values(student.performance).filter(score => typeof score === 'number' && score > 0).length;
-            const trend = getPerformanceTrend(student.performance);
-            const performanceClass = getPerformanceClass(avgScore);
+            <div class="cards-grid-scroll" style="overflow-x:auto; max-height:400px;">
+                <div class="cards-grid">
+                    ${allStudents.map(student => {
+                        const avgScore = calculateAverageScore(student.performance);
+                        const highestScore = Math.max(...Object.values(student.performance).filter(score => typeof score === 'number' && score > 0));
+                        const taskCount = Object.values(student.performance).filter(score => typeof score === 'number' && score > 0).length;
+                        const trend = getPerformanceTrend(student.performance);
+                        const performanceClass = getPerformanceClass(avgScore);
 
-            return `
-                        <div class="student-card">
-                            <div class="card-header">
-                                <h3>${student.name}</h3>
-                                <span class="student-id">${student.id}</span>
+                        return `
+                            <div class="student-card">
+                                <div class="card-header">
+                                    <h3>${student.name}</h3>
+                                    <span class="student-id">${student.id}</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="stat-row">
+                                        <span class="stat-label">Average Score:</span>
+                                        <span class="stat-value ${performanceClass}">${avgScore.toFixed(1)}%</span>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span class="stat-label">Highest Score:</span>
+                                        <span class="stat-value">${highestScore.toFixed(1)}%</span>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span class="stat-label">Tasks Completed:</span>
+                                        <span class="stat-value">${taskCount}</span>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span class="stat-label">Trend:</span>
+                                        <span class="stat-value">
+                                            <i class="${getTrendIcon(trend)}"></i>
+                                            ${trend}
+                                        </span>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span class="stat-label">Status:</span>
+                                        <span class="stat-value status-${student.current_status?.toLowerCase().replace(' ', '-') || 'pending'}">
+                                            ${student.current_status || 'Pending'}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <button class="btn-primary" onclick="displayStudentDashboard('${student.id}')">
+                                        <i class="fas fa-eye"></i> View Details
+                                    </button>
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <div class="stat-row">
-                                    <span class="stat-label">Average Score:</span>
-                                    <span class="stat-value ${performanceClass}">${avgScore.toFixed(1)}%</span>
-                                </div>
-                                <div class="stat-row">
-                                    <span class="stat-label">Highest Score:</span>
-                                    <span class="stat-value">${highestScore.toFixed(1)}%</span>
-                                </div>
-                                <div class="stat-row">
-                                    <span class="stat-label">Tasks Completed:</span>
-                                    <span class="stat-value">${taskCount}</span>
-                                </div>
-                                <div class="stat-row">
-                                    <span class="stat-label">Trend:</span>
-                                    <span class="stat-value">
-                                        <i class="${getTrendIcon(trend)}"></i>
-                                        ${trend}
-                                    </span>
-                                </div>
-                                <div class="stat-row">
-                                    <span class="stat-label">Status:</span>
-                                    <span class="stat-value status-${student.current_status?.toLowerCase().replace(' ', '-') || 'pending'}">
-                                        ${student.current_status || 'Pending'}
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="card-footer">
-                                <button class="btn-primary" onclick="displayStudentDashboard('${student.id}')">
-                                    <i class="fas fa-eye"></i> View Details
-                                </button>
-                            </div>
-                        </div>
-                    `;
-        }).join('')}
+                        `;
+                    }).join('')}
+                </div>
             </div>
         `;
     }

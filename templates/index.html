@@ -135,9 +135,36 @@
     </section>
 
     <!-- Main Content -->
-    <main class="main-content">
-        <div class="content-container">
-            <!-- Sidebar -->
+
+           
+            <!-- Dashboard Content -->
+            <section class="dashboard-content">
+                <!-- Individual Student Dashboard -->
+                <div id="individualDashboard" class="dashboard-view active">
+                    <div id="studentDashboard">
+                        <div class="welcome-screen">
+                            <div class="welcome-content">
+                                <div class="welcome-icon">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </div>
+                                <h2>Welcome to Student Analytics</h2>
+                                <p>Select a student from the sidebar to view their detailed performance analysis and
+                                    insights.</p>
+                                <div class="welcome-features">
+                                    <div class="feature">
+                                        <i class="fas fa-chart-line"></i>
+                                        <span>Performance Tracking</span>
+                                    </div>
+                                    <div class="feature">
+                                        <i class="fas fa-trending-up"></i>
+                                        <span>Progress Analytics</span>
+                                    </div>
+                                    <div class="feature">
+                                        <i class="fas fa-lightbulb"></i>
+                                        <span>Smart Insights</span>
+                                    </div>
+                                </div>
+                                 <!-- Sidebar -->
 
             <aside class="sidebar">
                 <div class="sidebar-header">
@@ -170,33 +197,6 @@
                 </div>
             </aside>
 
-            <!-- Dashboard Content -->
-            <section class="dashboard-content">
-                <!-- Individual Student Dashboard -->
-                <div id="individualDashboard" class="dashboard-view active">
-                    <div id="studentDashboard">
-                        <div class="welcome-screen">
-                            <div class="welcome-content">
-                                <div class="welcome-icon">
-                                    <i class="fas fa-graduation-cap"></i>
-                                </div>
-                                <h2>Welcome to Student Analytics</h2>
-                                <p>Select a student from the sidebar to view their detailed performance analysis and
-                                    insights.</p>
-                                <div class="welcome-features">
-                                    <div class="feature">
-                                        <i class="fas fa-chart-line"></i>
-                                        <span>Performance Tracking</span>
-                                    </div>
-                                    <div class="feature">
-                                        <i class="fas fa-trending-up"></i>
-                                        <span>Progress Analytics</span>
-                                    </div>
-                                    <div class="feature">
-                                        <i class="fas fa-lightbulb"></i>
-                                        <span>Smart Insights</span>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -353,7 +353,33 @@
       <h3 id="studentNameHeading"></h3>
       <p id="studentInstitute"></p>
       <p id="studentTargetSummary"></p>
-      <div id="taskTableContainer" style="overflow-x: auto;"></div>
+           <div id="taskTableContainer" style="overflow-x: auto;">
+        <!-- Add scrollable wrapper for the main student table -->
+        <div style="overflow-x: auto; overflow-y: auto; max-height: 400px; width: 100%;">
+          <table border="1" style="border-collapse: collapse; width: 100%; margin-top: 10px;">
+            <thead style="background-color: #f0f0f0;">
+              <tr>
+                <th style="padding: 8px;">Category</th>
+                <th style="padding: 8px;">Task</th>
+                <th style="padding: 8px;">Added On</th>
+                <th style="padding: 8px;">Deadline</th>
+                <th style="padding: 8px;">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${studentTasksData.map(task => `
+                <tr>
+                  <td style="padding: 8px;">Custom Task</td>
+                  <td style="padding: 8px;">${task.title || task.description}</td>
+                  <td style="padding: 8px;">${task.assigned_at}</td>
+                  <td style="padding: 8px;">${task.deadline}</td>
+                  <td style="padding: 8px;"><span style="background-color:#d1f7e3; padding:4px 8px; border-radius:5px;">${task.completion_status}</span></td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </div>
