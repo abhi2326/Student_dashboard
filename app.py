@@ -243,12 +243,9 @@ def health_check():
 
 @app.route('/api/students')
 def get_students():
-    try:
-        if not STUDENT_DATA:
-            return jsonify({"error": "No student data available from Google Sheets"}), 404
-        return jsonify(STUDENT_DATA)
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    df = get_dataframe_from_sheet('Student Performance')
+    students = process_student_data_from_dataframe(df)
+    return jsonify(students)
 
 @app.route('/api/student/<student_id>')
 def get_student(student_id):

@@ -593,32 +593,39 @@ if (performanceData && typeof performanceData === 'object') {
     window.showIndividualView = function () {
         currentView = 'individual';
         updateNavigation();
-
         document.querySelectorAll('.dashboard-view').forEach(view => view.classList.remove('active'));
         document.getElementById('individualDashboard').classList.add('active');
-
-        // Removed automatic call to displayStudentDashboard to prevent infinite loop
-        // The dashboard will be displayed when a student is explicitly clicked
     };
 
     window.showComprehensiveView = function () {
         currentView = 'comprehensive';
         updateNavigation();
-
         document.querySelectorAll('.dashboard-view').forEach(view => view.classList.remove('active'));
         document.getElementById('comprehensiveDashboard').classList.add('active');
-
         loadComprehensiveDashboard();
     };
 
     window.showAnalyticsView = function () {
         currentView = 'analytics';
         updateNavigation();
-
         document.querySelectorAll('.dashboard-view').forEach(view => view.classList.remove('active'));
         document.getElementById('analyticsDashboard').classList.add('active');
-
         loadAnalyticsDashboard();
+    };
+
+    window.showTasksView = function () {
+        currentView = 'tasks';
+        updateNavigation();
+        document.querySelectorAll('.dashboard-view').forEach(view => view.classList.remove('active'));
+        document.getElementById('taskDashboard').classList.add('active');
+        loadTasks();
+    };
+
+    window.showReferenceView = function () {
+        currentView = 'reference';
+        updateNavigation();
+        document.querySelectorAll('.dashboard-view').forEach(view => view.classList.remove('active'));
+        document.getElementById('referenceDashboard').classList.add('active');
     };
 
     function loadComprehensiveDashboard() {
